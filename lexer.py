@@ -70,12 +70,25 @@ class Lexer:
             t.type = "ERROR"
         return t
 
-    def t_INTEGERNUMBER(self, t):
-        r"([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])|[0]"
+    def t_FLOATNUMBER(self, t):
+        r"([0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9](\.)[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9])"
+        string = t.value
+        string = string.lstrip("0")
+        if string[0] == '.':
+            string = "0" + string
+        string = string.rstrip("0")
+        size = len(string)
+        if string[size - 1] == '.':
+            string = string + "0"
+        t.value = string
         return t
 
-    def t_FLOATNUMBER(self, t):
-        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]|([0]\.[0])"
+    def t_INTEGERNUMBER(self, t):
+        r"([0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9])"
+        string = t.value
+        t.value = string.lstrip("0")
+        if t.value == "":
+            t.value = "0"
         return t
 
     def t_newline(self, t):
