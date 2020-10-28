@@ -1,12 +1,12 @@
-from MyLexer import Lexer
+from lexer import Lexer
 
-lexer = Lexer().build()
+object1 = Lexer().build()
 file = open("MyTest.txt")
 input_text = file.read()
 file.close()
-lexer.input(input_text)
+object1.input(input_text)
 while True:
-    tok = lexer.token()
+    tok = object1.token()
     if not tok:
         break
     print(tok)

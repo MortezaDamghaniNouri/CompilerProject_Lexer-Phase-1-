@@ -7,7 +7,7 @@ class Lexer:
               "MAIN", "IF", "ELSE", "ELSEIF", "WHILE", "ON", "WHERE", "FOR",
               "AND", "OR", "NOT", "IN", "ASSIGN", "SUM", "SUB", "MUL", "DIV",
               "MOD", "GT", "GE", "LT", "LE", "EQ", "NE", "LCB", "RCB",
-              "LRB", "RRB", "LSB", "RSB", "SEMICOLON", "COLON", "COMMA", "ERROR!"]
+              "LRB", "RRB", "LSB", "RSB", "SEMICOLON", "COLON", "COMMA", "ERROR"]
 
     t_INTEGER = r"int"
     t_FLOAT = r"float"
@@ -51,13 +51,18 @@ class Lexer:
     t_COLON = r":"
     t_COMMA = r","
 
+    def t_ERROR(self, t):
+        r"(([*/+\-%][\n\t ]*[*/+\-%][\n\t ])+)|([0-9][A-Za-z0-9_]+)|([A-Z][A-Za-z0-9_]+)"
+        t.type = "ERROR"
+        return t
+
     def t_ID(self, t):
-        reserved = ["Int", "Float", "Bool", "Fun", "True", "False", "Print",
-                    "Return", "Main", "If", "Else", "Elseif", "While",
-                    "On", "Where", "For", "And", "Or", "Not", "In", "Error"]
-        r"[a-z_][0-9A-Za-z_]*"
-        if t.value in reserved:
-            t.type = "ERROR!"
+        r"[a-z_][0-9A-Za-z_]*^(int)^(float)^(bool)^(fun)^(print)^(return)^(main)^(if)^(else)^(elseif)^(while)^(on)^(where)^(for)^(and)^(or)^(not)^(in)"
+        capital_reserved = ["Int", "Float", "Bool", "Fun", "True", "False", "Print",
+                            "Return", "Main", "If", "Else", "Elseif", "While",
+                            "On", "Where", "For", "And", "Or", "Not", "In", "Error"]
+        if t.value in capital_reserved:
+            t.type = "ERROR"
         return t
 
     def t_INTEGERNUMBER(self, t):
@@ -65,12 +70,7 @@ class Lexer:
         return t
 
     def t_FLOATNUMBER(self, t):
-        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]"
-        return t
-
-    def t_ERROR(self, t):
-        r"([*/+-%][\n\t ]*[*/+-%][\n\t ])+"
-        t.type = "ERROR!"
+        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]|(0\.0)"
         return t
 
     def t_newline(self, t):
