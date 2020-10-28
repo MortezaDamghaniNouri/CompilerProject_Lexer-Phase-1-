@@ -1,5 +1,9 @@
 from ply import lex
 
+reserved = {"int": "INTEGER", "float": "FLOAT", "bool": "BOOLEAN", "fun": "FUNCTION", "print": "PRINT", "True": "TRUE",
+            "return": "RETURN", "main": "MAIN", "if": "IF", "else": "ELSE", "False": "FALSE", "elseif": "ELSEIF",
+            "while": "WHILE", "on": "ON", "where": "WHERE", "for": "FOR", "and": "AND", "or": "OR", "not": "NOT",
+            "in": "IN"}
 
 class Lexer:
     tokens = ["ID", "INTEGERNUMBER", "FLOATNUMBER", "INTEGER", "FLOAT",
@@ -51,17 +55,17 @@ class Lexer:
     t_COLON = r":"
     t_COMMA = r","
 
-    def t_ERROR(self, t):
-        r"(([*/+\-%][\n\t ]*[*/+\-%][\n\t ])+)|([0-9][A-Za-z0-9_]+)|([A-Z][A-Za-z0-9_]+)"
-        t.type = "ERROR"
+    def t_ID(self, t):
+        r"[a-z_][0-9A-Za-z_]*"
+        if t.value in reserved:
+            t.type = reserved[t.value]
         return t
 
-    def t_ID(self, t):
-        r"[a-z_][0-9A-Za-z_]*^(int)^(float)^(bool)^(fun)^(print)^(return)^(main)^(if)^(else)^(elseif)^(while)^(on)^(where)^(for)^(and)^(or)^(not)^(in)"
-        capital_reserved = ["Int", "Float", "Bool", "Fun", "True", "False", "Print",
-                            "Return", "Main", "If", "Else", "Elseif", "While",
-                            "On", "Where", "For", "And", "Or", "Not", "In", "Error"]
-        if t.value in capital_reserved:
+    def t_ERROR(self, t):
+        r"([+*/%\-]+[ \t\n]*)+|([0-9][A-Za-z0-9_]+)|([A-Z][A-Za-z0-9_]+)"
+        if t.value in reserved:
+            t.type = reserved[t.value]
+        else:
             t.type = "ERROR"
         return t
 
