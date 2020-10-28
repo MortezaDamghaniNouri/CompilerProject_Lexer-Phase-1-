@@ -5,6 +5,7 @@ reserved = {"int": "INTEGER", "float": "FLOAT", "bool": "BOOLEAN", "fun": "FUNCT
             "while": "WHILE", "on": "ON", "where": "WHERE", "for": "FOR", "and": "AND", "or": "OR", "not": "NOT",
             "in": "IN"}
 
+
 class Lexer:
     tokens = ["ID", "INTEGERNUMBER", "FLOATNUMBER", "INTEGER", "FLOAT",
               "BOOLEAN", "FUNCTION", "TRUE", "FALSE", "PRINT", "RETURN",
@@ -62,7 +63,7 @@ class Lexer:
         return t
 
     def t_ERROR(self, t):
-        r"([+*/%\-]+[ \t\n]*)+|([0-9][A-Za-z0-9_]+)|([A-Z][A-Za-z0-9_]+)"
+        r"((([+*/%\-][ \t\n]*[+\-/%*][ \t\n]*)+)([+*/\-%][ \t\n]*)*|([0-9][0-9]*[A-Za-z_]+)|([A-Z][A-Za-z0-9_]+))"
         if t.value in reserved:
             t.type = reserved[t.value]
         else:
@@ -74,7 +75,7 @@ class Lexer:
         return t
 
     def t_FLOATNUMBER(self, t):
-        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]|(0\.0)"
+        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]|([0]\.[0])"
         return t
 
     def t_newline(self, t):
