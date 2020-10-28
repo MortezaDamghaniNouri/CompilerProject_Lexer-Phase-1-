@@ -51,6 +51,40 @@ class Lexer:
     t_COLON = r":"
     t_COMMA = r","
 
+    def t_ID(self, t):
+        reserved = ["Int", "Float", "Bool", "Fun", "True", "False", "Print",
+                    "Return", "Main", "If", "Else", "Elseif", "While",
+                    "On", "Where", "For", "And", "Or", "Not", "In", "Error"]
+        r"[a-z_][0-9A-Za-z_]*"
+        if t.value in reserved:
+            t.type = "ERROR!"
+        return t
+
+    def t_INTEGERNUMBER(self, t):
+        r"([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])|[0]"
+        return t
+
+    def t_FLOATNUMBER(self, t):
+        r"(([1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9]?[1-9])(\.)([0-9]*[1-9]))|[0]"
+        return t
+
+    def t_ERROR(self, t):
+        r"([*/+-%][\n\t ]*[*/+-%][\n\t ])+"
+        t.type = "ERROR!"
+        return t
+
+    def t_newline(self, t):
+        r'\n+'
+        t.lexer.lineno += len(t.value)
+
+    t_ignore = '\n \t'
+
+    def t_error(self, t):
+        raise Exception('Error at', t.value)
+
+    def build(self, **kwargs):
+        self.lexer = lex.lex(module=self, **kwargs)
+        return self.lexer
 
 
 

@@ -1,1 +1,3 @@
 https://www.dabeaz.com/ply/ply.html
+https://www.csd.uwo.ca/~mmorenom/CS447/Lectures/Lexical.html/node11.html
+https://docs.oracle.com/cd/E19504-01/802-5880/lex-6/index.html
