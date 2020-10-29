@@ -3,7 +3,11 @@ from ply import lex
 reserved = {"int": "INTEGER", "float": "FLOAT", "bool": "BOOLEAN", "fun": "FUNCTION", "print": "PRINT", "True": "TRUE",
             "return": "RETURN", "main": "MAIN", "if": "IF", "else": "ELSE", "False": "FALSE", "elseif": "ELSEIF",
             "while": "WHILE", "on": "ON", "where": "WHERE", "for": "FOR", "and": "AND", "or": "OR", "not": "NOT",
-            "in": "IN"}
+            "in": "IN", "=": "ASSIGN", "+": "SUM", "-": "SUB", "*": "MUL",
+            "/": "DIV", "%": "MOD", ">": "GT", ">=": "GE", "<": "LT",
+            "<=": "LE", "==": "EQ", "!=": "NE", "{": "LCB", "}": "RCB",
+            "(": "LRB", ")": "RRB", "[": "LSB", "]": "RSB", ";": "SEMICOLON",
+            ":": "COLON", ",": "COMMA"}
 
 
 class Lexer:
@@ -45,7 +49,7 @@ class Lexer:
     t_LT = r"\<"
     t_LE = r"\<="
     t_EQ = r"\=="
-    t_NE = r"!="
+    t_NE = r"\!="
     t_LCB = r"\{"
     t_RCB = r"\}"
     t_LRB = r"\("
@@ -62,7 +66,7 @@ class Lexer:
             t.type = reserved[t.value]
         return t
 
-    def t_ERROR(self, t):
+    def t_ERROR_one(self, t):
         r"((([+*/%\-][ \t\n]*[+\-/%*][ \t\n]*)+)([+*/\-%][ \t\n]*)*|([0-9][0-9]*[A-Za-z_]+)|([A-Z][A-Za-z0-9_]+))"
         if t.value in reserved:
             t.type = reserved[t.value]
@@ -96,6 +100,14 @@ class Lexer:
         t.lexer.lineno += len(t.value)
 
     t_ignore = '\n \t'
+
+    def t_ERROR_two(self, t):
+        r"[^\s+\-*/%\(\)\{\}\[\]=\>\<!;:,]+"
+        if t.value in reserved:
+            t.type = reserved[t.value]
+        else:
+            t.type = "ERROR"
+        return t
 
     def t_error(self, t):
         raise Exception('Error at', t.value)
