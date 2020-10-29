@@ -67,7 +67,12 @@ class Lexer:
         return t
 
     def t_ERROR_one(self, t):
-        r"((([+*/%\-][ \t\n]*[+\-/%*][ \t\n]*)+)([+*/\-%][ \t\n]*)*|([0-9][0-9]*[A-Za-z_]+)|([A-Z][A-Za-z0-9_]+))"
+        r"([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*(\.)[0-9]+)|(([0-9]+(\.)[0-9]+(\.))([0-9]+(\.)?)*)"
+        t.type = "ERROR"
+        return t
+
+    def t_ERROR_two(self, t):
+        r"((([+*/%\-][ \t\n]*[+\-/%*][ \t\n]*)+)([+*/\-%][ \t\n]*)*|([0-9][0-9]*[A-Za-z_]+)|([A-Z][A-Za-z0-9_]+)|[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*)"
         if t.value in reserved:
             t.type = reserved[t.value]
         else:
@@ -75,7 +80,7 @@ class Lexer:
         return t
 
     def t_FLOATNUMBER(self, t):
-        r"([0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9](\.)[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9])"
+        r"([0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9](\.)[0-9]+)"
         string = t.value
         string = string.lstrip("0")
         if string[0] == '.':
@@ -101,7 +106,7 @@ class Lexer:
 
     t_ignore = '\n \t'
 
-    def t_ERROR_two(self, t):
+    def t_ERROR_three(self, t):
         r"[^\s+\-*/%\(\)\{\}\[\]=\>\<!;:,]+"
         if t.value in reserved:
             t.type = reserved[t.value]
